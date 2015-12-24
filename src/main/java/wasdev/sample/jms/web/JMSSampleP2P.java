@@ -22,6 +22,7 @@ package wasdev.sample.jms.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
@@ -37,25 +38,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class JMSSampleP2P
- */
+
 @WebServlet("/JMSSampleP2P")
 public class JMSSampleP2P extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public JMSSampleP2P() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
+	
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
@@ -71,11 +59,13 @@ public class JMSSampleP2P extends HttpServlet {
 				// call the Send and Receive Message
 				sendAndReceive(request, response);
 			} else if (strAction.equalsIgnoreCase("sendMessage")) {
-				// Send Message only
+				
 				sendMessage(request, response);
+				
 			} else if (strAction.equalsIgnoreCase("receiveAllMessages")) {
-				// Receive All messages from queue
+				
 				receiveAllMessages(request, response);
+				
 			} else if (strAction
 					.equalsIgnoreCase("receiveAllMessagesSelectors")) {
 				// receive all the messages using message selector
@@ -175,26 +165,23 @@ public class JMSSampleP2P extends HttpServlet {
 		out.println("SendMessage Started");
 
 		// create a queue connection factory
-		QueueConnectionFactory cf1 = (QueueConnectionFactory) new InitialContext()
-		.lookup("java:comp/env/jndi_JMS_BASE_QCF");
+		QueueConnectionFactory cf1 = (QueueConnectionFactory) new InitialContext().lookup("java:comp/env/jndi_JMS_BASE_QCF");
 		// create a queue by performing jndi lookup
-		Queue queue = (Queue) new InitialContext()
-		.lookup("java:comp/env/jndi_INPUT_Q");
+		Queue queue = (Queue) new InitialContext().lookup("java:comp/env/jndi_INPUT_Q");
 
 		// create a queue connection
 		QueueConnection con = cf1.createQueueConnection();
 		con.start();
 		// create a queue sender
-		QueueSession sessionSender = con.createQueueSession(false,
-				javax.jms.Session.AUTO_ACKNOWLEDGE);
+		QueueSession sessionSender = con.createQueueSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 
-		QueueSender send = sessionSender.createSender(queue);
+		QueueSender sender = sessionSender.createSender(queue);
 
 		TextMessage msg = sessionSender.createTextMessage();
 		msg.setStringProperty("COLOR", "BLUE");
-		msg.setText("Liberty Sample Message");
-
-		send.send(msg);
+		msg.setText("Hola Offla " + new Date());
+		
+		sender.send(msg);
 		out.println("Message sent successfuly");
 
 		if (con != null)
@@ -223,19 +210,16 @@ public class JMSSampleP2P extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("ReceiveAllMessages Started");
 		// create queue connection factory
-		QueueConnectionFactory cf1 = (QueueConnectionFactory) new InitialContext()
-		.lookup("java:comp/env/jndi_JMS_BASE_QCF");
+		QueueConnectionFactory cf1 = (QueueConnectionFactory) new InitialContext().lookup("java:comp/env/jndi_JMS_BASE_QCF");
 
 		// create a queue by looking up from the JNDI repository
-		Queue queue = (Queue) new InitialContext()
-		.lookup("java:comp/env/jndi_INPUT_Q");
+		Queue queue = (Queue) new InitialContext().lookup("java:comp/env/jndi_INPUT_Q");
 
 		// create a queue connection
 		QueueConnection con = cf1.createQueueConnection();
 		con.start();
 
-		QueueSession session = con.createQueueSession(false,
-				javax.jms.Session.AUTO_ACKNOWLEDGE);
+		QueueSession session = con.createQueueSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 		QueueReceiver receive = session.createReceiver(queue);
 
 		TextMessage msg = null;

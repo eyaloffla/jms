@@ -18,10 +18,9 @@
 	<!-- By default messaging engine listens on port 7276 (unsecured) and 7286 
 		(secured) for incoming data from JMS clients. If you want to bind the messaging 
 		engine to a different port, you must use the <wasJmsEndpoint> element. -->
-	<wasJmsEndpoint id="InboundJmsCommsEndpoint"
-		wasJmsPort="9126"
-		wasJmsSSLPort="9127" />
-
+	<wasJmsEndpoint   wasJmsPort="9126"  wasJmsSSLPort="9127" />
+	
+	 
 	<!-- A messaging engine is a component, running inside a server, that manages 
 		messaging resources. Applications are connected to a messaging engine when 
 		they send and receive messages. When wasJmsServer-1.0 feature is added in 

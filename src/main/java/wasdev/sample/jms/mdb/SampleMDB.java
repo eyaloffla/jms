@@ -38,12 +38,11 @@ import javax.naming.InitialContext;
 public class SampleMDB implements MessageListener {
 
 	@Resource
-	MessageDrivenContext ejbcontext;
+	MessageDrivenContext messageDrivenContext;
 
-	@SuppressWarnings("unused")
-	@Resource
-	private void setMessageDrivenContext(EJBContext ejbcontext) {
-
+	@Resource 
+	public void setMessageDrivenContext(MessageDrivenContext context) {
+	   this.messageDrivenContext = context;
 	}
 
 	@PostConstruct
